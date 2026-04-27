@@ -1,3 +1,6 @@
+// URL вашего Google Apps Script веб-приложения
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzLdExTZRNGiFcNnVJIKDloOMjUYe_qE2L1avRD61umACKFbxDf6LffGsd0HkX-Rqg/exec';
+
 // Создание плавающих сердечек
 function createHearts() {
     const container = document.getElementById('heartsContainer');
@@ -50,24 +53,123 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
-// Анимация при нажатии на кнопку
+// Отправка данных в Google Таблицу
+async function sendToGoogleSheets(data) {
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            redirect: 'follow'
+        });
+        
+        return true;
+    } catch (error) {
+        console.error('Ошибка отправки в Google Sheets:', error);
+        throw error;
+    }
+}
+
+// Сохранение гостей локально
+function saveGuestLocally(guestData) {
+    let guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
+    guests.push({
+        ...guestData,
+        date: new Date().toISOString()
+    });
+    localStorage.setItem('weddingGuests', JSON.stringify(guests));
+}
+
+// Работа с формой
 function handleRSVP() {
-    const button = document.querySelector('.rsvp-button');
+    const rsvpButton = document.querySelector('.rsvp-button');
+    const formContainer = document.getElementById('rsvpForm');
+    const closeButton = document.getElementById('closeForm');
+    const form = document.getElementById('weddingForm');
+    const thanksOverlay = document.getElementById('thanksOverlay');
+    const backToSite = document.getElementById('backToSite');
     
-    button.addEventListener('click', function(e) {
-        // Создаем эффект конфетти
-        createConfetti();
+    // Открытие формы
+    rsvpButton.addEventListener('click', () => {
+        formContainer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    // Закрытие формы
+    function closeForm() {
+        formContainer.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    closeButton.addEventListener('click', closeForm);
+    formContainer.addEventListener('click', (e) => {
+        if (e.target === formContainer) closeForm();
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && formContainer.classList.contains('active')) {
+            closeForm();
+        }
+    });
+    
+    // Закрытие страницы "Спасибо"
+    backToSite.addEventListener('click', () => {
+        thanksOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+    
+    // Отправка формы
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        // Анимация кнопки
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 200);
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
         
-        // Открываем форму (можно заменить на свою логику)
-        const email = prompt('Пожалуйста, введите ваш email для подтверждения:');
-        if (email) {
-            alert('Спасибо! Мы отправили подтверждение на ' + email);
+        // Собираем данные формы
+        const selectedDrinks = [];
+        document.querySelectorAll('input[name="drinks"]:checked').forEach(checkbox => {
+            selectedDrinks.push(checkbox.value);
+        });
+        
+        const guestData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            guests: document.querySelector('select[name="guests"]').value,
+            drinks: selectedDrinks.join(', ') || 'Не указано',
+            message: document.getElementById('message').value || 'Нет'
+        };
+        
+        try {
+            // Отправляем в Google Sheets
+            await sendToGoogleSheets(guestData);
+            
+            // Сохраняем локально
+            saveGuestLocally(guestData);
+            
+            // Закрываем форму
+            closeForm();
+            
+            // Показываем страницу "Спасибо"
+            thanksOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Очищаем форму
+            form.reset();
+            
+            // Эффект конфетти
+            createConfetti();
+            
+        } catch (error) {
+            alert('Произошла ошибка при отправке. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+            console.error('Ошибка:', error);
+        } finally {
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
         }
     });
 }
@@ -84,7 +186,7 @@ function createConfetti() {
         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.left = Math.random() * 100 + '%';
         confetti.style.top = '-10px';
-        confetti.style.zIndex = '1000';
+        confetti.style.zIndex = '3000';
         confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
         confetti.style.pointerEvents = 'none';
         
@@ -108,7 +210,28 @@ function createConfetti() {
     }
 }
 
-// Плавная прокрутка к секциям
+// Экспорт списка гостей в CSV
+function exportGuestsList() {
+    const guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
+    
+    if (guests.length === 0) {
+        alert('Пока нет подтверждений');
+        return;
+    }
+    
+    let csv = '\uFEFFИмя,Email,Телефон,Гостей,Напитки,Пожелания,Дата\n';
+    guests.forEach(guest => {
+        csv += `"${guest.name}","${guest.email}","${guest.phone}","${guest.guests}","${guest.drinks || 'Не указано'}","${guest.message || ''}","${guest.date}"\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'список_гостей.csv';
+    link.click();
+}
+
+// Плавная прокрутка
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -124,7 +247,7 @@ function initSmoothScroll() {
     });
 }
 
-// Анимация появления элементов при скролле
+// Анимация появления при скролле
 function initScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -143,16 +266,18 @@ function initScrollAnimations() {
     });
 }
 
-// Инициализация всего
-document.addEventListener('DOMContentLoaded', () => {
-    createHearts();
-    startCountdown();
-    handleRSVP();
-    initSmoothScroll();
-    initScrollAnimations();
+// Горячая клавиша для экспорта (Ctrl+Shift+E)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+        e.preventDefault();
+        const password = prompt('Введите пароль для экспорта списка гостей:');
+        if (password === 'wedding2025') {
+            exportGuestsList();
+        }
+    }
 });
 
-// Добавляем параллакс эффект для цветов
+// Параллакс эффект для цветов
 document.addEventListener('mousemove', (e) => {
     const flowers = document.querySelectorAll('.flower');
     const mouseX = e.clientX / window.innerWidth - 0.5;
@@ -162,4 +287,13 @@ document.addEventListener('mousemove', (e) => {
         const speed = (index + 1) * 20;
         flower.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
     });
+});
+
+// Инициализация всего
+document.addEventListener('DOMContentLoaded', () => {
+    createHearts();
+    startCountdown();
+    handleRSVP();
+    initSmoothScroll();
+    initScrollAnimations();
 });
