@@ -1,3 +1,26 @@
+// Дата дедлайна подтверждения
+const DEADLINE_DATE = new Date('2026-06-01T23:59:59').getTime();
+
+// Проверка, не прошёл ли дедлайн
+function isDeadlinePassed() {
+    return new Date().getTime() > DEADLINE_DATE;
+}
+
+// Блокировка кнопки после дедлайна
+function checkDeadline() {
+    const rsvpButton = document.getElementById('rsvpButton');
+    
+    if (isDeadlinePassed()) {
+        rsvpButton.textContent = 'Подтверждение закрыто';
+        rsvpButton.disabled = true;
+        rsvpButton.style.opacity = '0.5';
+        rsvpButton.style.cursor = 'not-allowed';
+        rsvpButton.style.borderColor = '#666';
+        rsvpButton.style.color = '#666';
+        rsvpButton.title = 'Приём подтверждений завершён 01.06.2026';
+    }
+}
+
 // Обработчики модального окна
 function initModal() {
     const rsvpButton = document.getElementById('rsvpButton');
@@ -8,8 +31,11 @@ function initModal() {
     const hiddenIframe = document.querySelector('iframe[name="hidden_iframe"]');
     const form = document.getElementById('weddingForm');
     
-    // Открытие
+    // Открытие (только если дедлайн не прошёл)
     rsvpButton.addEventListener('click', () => {
+        if (isDeadlinePassed()) {
+            return; // Не открываем форму
+        }
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
@@ -43,23 +69,22 @@ function initModal() {
     // Отслеживаем отправку формы через iframe
     if (hiddenIframe) {
         hiddenIframe.addEventListener('load', () => {
-            // Сохраняем локально
             saveGuestLocally();
-            
-            // Закрываем модальное окно
             closeModal();
-            
-            // Показываем "Спасибо"
             thanksOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // Очищаем форму
             form.reset();
         });
     }
     
-    // Предотвращаем стандартную отправку (используем iframe)
+    // Предотвращаем стандартную отправку
     form.addEventListener('submit', (e) => {
+        if (isDeadlinePassed()) {
+            e.preventDefault();
+            alert('Приём подтверждений завершён 01.06.2026');
+            return;
+        }
+        
         const submitBtn = form.querySelector('.submit-btn');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Отправка...';
@@ -83,7 +108,7 @@ function saveGuestLocally() {
         guests: formData.get('guests') || 'Не указано',
         transfer: formData.get('transfer') || 'Не указано',
         food: formData.get('food') || 'Не указано',
-        alcohol: formData.get('alcohol') || 'Не указано',
+        alcohol: formData.getAll('alcohol').join(', ') || 'Не указано',
         child: formData.get('child') || 'Не указано',
         message: formData.get('message') || 'Нет',
         date: new Date().toISOString()
@@ -139,5 +164,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
+    checkDeadline();
     initModal();
 });
