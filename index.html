@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свадьба Анны и Александра</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="main-container">
+        <section class="hero-section">
+            <div class="floating-elements">
+                <span class="flower flower-1">💐</span>
+                <span class="flower flower-2">🌸</span>
+                <span class="flower flower-3">🌹</span>
+                <span class="flower flower-4">🌺</span>
+            </div>
+            
+            <div class="hero-content">
+                <p class="save-the-date">Сохраните дату</p>
+                <h1 class="names">
+                    <span class="name-animation">Анна</span>
+                    <span class="and-sign">&</span>
+                    <span class="name-animation">Александр</span>
+                </h1>
+                <p class="date">15 Июля 2025</p>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <span id="days" class="countdown-number">00</span>
+                        <span class="countdown-label">Дней</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="hours" class="countdown-number">00</span>
+                        <span class="countdown-label">Часов</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="minutes" class="countdown-number">00</span>
+                        <span class="countdown-label">Минут</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="seconds" class="countdown-number">00</span>
+                        <span class="countdown-label">Секунд</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="invitation-section">
+            <div class="invitation-card">
+                <h2>Дорогие гости!</h2>
+                <p class="invitation-text">
+                    Мы счастливы пригласить вас разделить с нами<br>
+                    самый важный день в нашей жизни!<br>
+                    Пожалуйста, подтвердите ваше присутствие
+                </p>
+                <div class="wedding-details">
+                    <div class="detail-item">
+                        <span class="detail-icon">📅</span>
+                        <p>15 Июля 2025<br>Среда</p>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">⏰</span>
+                        <p>16:00<br>Сбор гостей</p>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-icon">📍</span>
+                        <p>Ресторан "White Garden"<br>ул. Цветочная, 15</p>
+                    </div>
+                </div>
+                <button class="rsvp-button">
+                    <span>Подтвердить участие</span>
+                    <span class="button-overlay"></span>
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
