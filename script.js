@@ -24,7 +24,7 @@ function createHearts() {
 
 // Таймер обратного отсчета
 function startCountdown() {
-    const weddingDate = new Date('2025-07-15T16:00:00').getTime();
+    const weddingDate = new Date('2026-09-13T16:00:00').getTime();
     
     function updateCountdown() {
         const now = new Date().getTime();
