@@ -5,84 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Свадьба Елены и Сергея</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="hearts-container" id="heartsContainer"></div>
-    
     <div class="main-container">
+        
+        <!-- Hero Section с фото -->
         <section class="hero-section">
-            <div class="floating-elements">
-                <span class="flower flower-1">💐</span>
-                <span class="flower flower-2">🌸</span>
-                <span class="flower flower-3">🌹</span>
-                <span class="flower flower-4">🌺</span>
+            <div class="hero-photo">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200" alt="Сергей и Елена" class="main-photo">
+                <div class="photo-overlay"></div>
             </div>
-            
             <div class="hero-content">
-                <p class="save-the-date">Сохраните дату</p>
-                <h1 class="names">
-                    <span class="name-animation">Елена</span>
-                    <span class="and-sign">&</span>
-                    <span class="name-animation">Сергей</span>
-                </h1>
-                <p class="date">13 Сентября 2026</p>
-                <div class="countdown">
-                    <div class="countdown-item">
-                        <span id="days" class="countdown-number">00</span>
-                        <span class="countdown-label">Дней</span>
+                <h1 class="names">Сергей & Елена</h1>
+                <p class="hero-subtitle">Приглашаем Вас разделить с нами наш незабываемый день</p>
+                <p class="hero-date">Сентябрь 13 • Суббота</p>
+            </div>
+        </section>
+
+        <!-- Секция Приглашение -->
+        <section class="invitation-text-section">
+            <div class="text-block">
+                <h2>Дорогой<br>Гость!</h2>
+                <p>Мы рады сообщить Вам, что <strong>13.09.2026</strong> состоится самое главное торжество в нашей жизни — день нашей свадьбы!</p>
+                <p>Приглашаем Вас разделить с нами радость этого незабываемого дня.</p>
+            </div>
+        </section>
+
+        <!-- Секция Меню -->
+        <section class="menu-section">
+            <div class="text-block">
+                <h2>МЕНЮ</h2>
+                <p>Меню разнообразно, поэтому сообщите нам заранее, если у вас есть какие-либо предпочтения или диетические ограничения.</p>
+                <p class="text-small">После подтверждения вы сможете пройти опрос о своих вкусовых предпочтениях и напитках.</p>
+            </div>
+        </section>
+
+        <!-- Секция Подтверждение -->
+        <section class="confirmation-section">
+            <div class="text-block">
+                <h2>ПОДТВЕРЖДЕНИЕ</h2>
+                <p>Пожалуйста, подтвердите свое присутствие <strong>до 05.05.2026</strong></p>
+                <div class="cta-block">
+                    <p class="cta-title">ЖДЁМ ВАС НА СВАДЬБЕ!</p>
+                    <button class="rsvp-button" id="rsvpButton">
+                        <span>Подтвердить</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция Расписание -->
+        <section class="schedule-section">
+            <div class="text-block">
+                <h2>Свадебное расписание</h2>
+                
+                <div class="schedule-item">
+                    <div class="schedule-time">12:00</div>
+                    <div class="schedule-info">
+                        <p class="schedule-title">Венчание</p>
+                        <p class="schedule-place">Кафедральный собор Рождества Христова</p>
+                        <p class="schedule-address">г. Волгодонск, ул. Карла Маркса, 1</p>
                     </div>
-                    <div class="countdown-item">
-                        <span id="hours" class="countdown-number">00</span>
-                        <span class="countdown-label">Часов</span>
+                </div>
+
+                <div class="schedule-item">
+                    <div class="schedule-time">16:00</div>
+                    <div class="schedule-info">
+                        <p class="schedule-title">Сбор гостей</p>
                     </div>
-                    <div class="countdown-item">
-                        <span id="minutes" class="countdown-number">00</span>
-                        <span class="countdown-label">Минут</span>
+                </div>
+
+                <div class="schedule-item">
+                    <div class="schedule-time">16:30</div>
+                    <div class="schedule-info">
+                        <p class="schedule-title">Выездная регистрация брака</p>
                     </div>
-                    <div class="countdown-item">
-                        <span id="seconds" class="countdown-number">00</span>
-                        <span class="countdown-label">Секунд</span>
+                </div>
+
+                <div class="schedule-item">
+                    <div class="schedule-time">17:00</div>
+                    <div class="schedule-info">
+                        <p class="schedule-title">Банкет</p>
+                        <p class="schedule-place">Ресторан «Family House»</p>
+                        <p class="schedule-address">г. Волгодонск, ул. Отдыха, 51 а</p>
+                    </div>
+                </div>
+
+                <div class="schedule-item">
+                    <div class="schedule-time">00:00</div>
+                    <div class="schedule-info">
+                        <p class="schedule-title">Окончание банкета</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="invitation-section">
-            <div class="invitation-card">
-                <h2>Дорогие гости!</h2>
-                <p class="invitation-text">
-                    Мы счастливы пригласить вас разделить с нами<br>
-                    самый важный день в нашей жизни!<br>
-                    Пожалуйста, подтвердите ваше присутствие
-                </p>
-                <div class="wedding-details">
-                    <div class="detail-item">
-                        <span class="detail-icon">📅</span>
-                        <p>13 Сентября 2026<br>Воскресенье</p>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-icon">⏰</span>
-                        <p>16:00<br>Сбор гостей</p>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-icon">📍</span>
-                        <p>Ресторан "White Garden"<br>ул. Цветочная, 15</p>
-                    </div>
-                </div>
-                <button class="rsvp-button">
-                    <span>Подтвердить участие</span>
-                    <span class="button-overlay"></span>
-                </button>
-            </div>
-        </section>
     </div>
 
     <!-- Модальное окно формы -->
-    <div class="rsvp-form-container" id="rsvpForm">
-        <div class="form-card">
-            <span class="close-form" id="closeForm">&times;</span>
-            <h3>Подтверждение участия</h3>
+    <div class="rsvp-modal" id="rsvpModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <h3>Подтверждение присутствия</h3>
+            <p class="modal-subtitle">Пожалуйста, ответьте на вопросы, которые для вас подготовили Жених и Невеста:</p>
+            
             <form id="weddingForm" 
                   action="https://script.google.com/macros/s/AKfycbxPCp6LAwPlGtlL9rUzqcE4D5CQc1P0XNLNlKRywAoBSfAxmJY9tBBihpf8g3-IpoOb/exec" 
                   method="POST" 
@@ -90,61 +117,89 @@
                 
                 <iframe name="hidden_iframe" style="display:none;"></iframe>
                 
+                <!-- Имя -->
                 <div class="form-group">
-                    <label for="name">Ваше имя *</label>
-                    <input type="text" id="name" name="name" required placeholder="Иван и Мария">
+                    <label>Ваше имя *</label>
+                    <input type="text" name="name" required placeholder="Введите ваше имя">
                 </div>
                 
+                <!-- Email -->
                 <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required placeholder="example@mail.ru">
+                    <label>Email *</label>
+                    <input type="email" name="email" required placeholder="example@mail.ru">
                 </div>
-                
+
+                <!-- Телефон -->
                 <div class="form-group">
-                    <label for="phone">Телефон</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+7 (999) 123-45-67">
+                    <label>Телефон</label>
+                    <input type="tel" name="phone" placeholder="+7 (999) 123-45-67">
                 </div>
-                
+
+                <!-- Количество гостей -->
                 <div class="form-group">
                     <label>Количество гостей *</label>
-                    <div class="guests-selector">
-                        <select name="guests" required>
-                            <option value="">Выберите...</option>
-                            <option value="1">1 гость</option>
-                            <option value="2">2 гостя</option>
-                            <option value="3">3 гостя</option>
-                            <option value="4">4 гостя</option>
-                            <option value="5">5 гостей</option>
-                        </select>
+                    <select name="guests" required>
+                        <option value="">Выберите...</option>
+                        <option value="1">1 гость</option>
+                        <option value="2">2 гостя</option>
+                        <option value="3">3 гостя</option>
+                        <option value="4">4 гостя</option>
+                        <option value="5">5 гостей</option>
+                    </select>
+                </div>
+
+                <!-- Трансфер -->
+                <div class="form-group">
+                    <label>Потребуется ли вам трансфер?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="transfer" value="Нет" checked> Нет</label>
+                        <label><input type="radio" name="transfer" value="Только до торжества"> Только до торжества</label>
+                        <label><input type="radio" name="transfer" value="Только после торжества"> Только после торжества</label>
+                        <label><input type="radio" name="transfer" value="До и после торжества"> До и после торжества</label>
                     </div>
                 </div>
-                
+
+                <!-- Предпочтения по еде -->
                 <div class="form-group">
-                    <label>Предпочтения по напиткам</label>
-                    <div class="drinks-options">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="drinks" value="Вино"> Вино
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="drinks" value="Шампанское"> Шампанское
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="drinks" value="Виски"> Виски
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="drinks" value="Безалкогольное"> Безалкогольное
-                        </label>
+                    <label>Есть ли у вас особые предпочтения по еде?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="food" value="Нет ограничений" checked> Нет ограничений</label>
+                        <label><input type="radio" name="food" value="Не ем мясо"> Не ем мясо</label>
+                        <label><input type="radio" name="food" value="Не ем рыбу"> Не ем рыбу</label>
+                        <label><input type="radio" name="food" value="Вегетарианец"> Вегетарианец</label>
                     </div>
                 </div>
-                
+
+                <!-- Алкоголь -->
                 <div class="form-group">
-                    <label for="message">Пожелания / Аллергии</label>
-                    <textarea id="message" name="message" rows="3" placeholder="Есть ли у вас аллергия или особые пожелания?"></textarea>
+                    <label>Какой алкоголь вы предпочитаете?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="alcohol" value="Красное вино" checked> Красное вино</label>
+                        <label><input type="radio" name="alcohol" value="Белое вино"> Белое вино</label>
+                        <label><input type="radio" name="alcohol" value="Шампанское"> Шампанское</label>
+                        <label><input type="radio" name="alcohol" value="Виски/коньяк"> Виски/коньяк</label>
+                        <label><input type="radio" name="alcohol" value="Водка"> Водка</label>
+                        <label><input type="radio" name="alcohol" value="Не буду пить алкоголь"> Не буду пить алкоголь</label>
+                    </div>
+                </div>
+
+                <!-- Ребёнок -->
+                <div class="form-group">
+                    <label>Будет ли с вами на празднике ребёнок?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="child" value="Нет" checked> Нет</label>
+                        <label><input type="radio" name="child" value="Да"> Да</label>
+                    </div>
+                </div>
+
+                <!-- Пожелания -->
+                <div class="form-group">
+                    <label>Дополнительные пожелания</label>
+                    <textarea name="message" rows="3" placeholder="Ваши пожелания..."></textarea>
                 </div>
                 
                 <button type="submit" class="submit-btn">
                     <span>Отправить</span>
-                    <span class="btn-spinner"></span>
                 </button>
             </form>
         </div>
@@ -153,7 +208,7 @@
     <!-- Страница "Спасибо" -->
     <div class="thanks-overlay" id="thanksOverlay">
         <div class="thanks-card">
-            <div class="thanks-icon">💝</div>
+            <div class="thanks-icon">🤍</div>
             <h2>Спасибо!</h2>
             <p>Мы получили ваше подтверждение!<br>
             Ждём вас на нашем празднике<br>
