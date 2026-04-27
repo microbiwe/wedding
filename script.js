@@ -1,4 +1,4 @@
-// URL вашего Google Apps Script
+// URL Google Apps Script (не используется для отправки, только для инфо)
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPCp6LAwPlGtlL9rUzqcE4D5CQc1P0XNLNlKRywAoBSfAxmJY9tBBihpf8g3-IpoOb/exec';
 
 // Создание плавающих сердечек
@@ -53,98 +53,48 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
-// Отправка данных в Google Таблицу (альтернативный метод через GET/redirect)
-function sendToGoogleSheets(data) {
-    return new Promise((resolve, reject) => {
-        // Создаём скрытый iframe для отправки
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.name = 'google-script-frame';
-        document.body.appendChild(iframe);
-        
-        // Создаём форму внутри iframe
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = GOOGLE_SCRIPT_URL;
-        form.target = 'google-script-frame';
-        
-        // Добавляем поля
-        const fields = {
-            'name': data.name,
-            'email': data.email,
-            'phone': data.phone,
-            'guests': data.guests,
-            'drinks': data.drinks,
-            'message': data.message
-        };
-        
-        Object.keys(fields).forEach(key => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = fields[key];
-            form.appendChild(input);
-        });
-        
-        document.body.appendChild(form);
-        
-        // Таймаут на случай зависания
-        const timeout = setTimeout(() => {
-            console.log('Отправка через iframe выполнена (таймаут)');
-            cleanup();
-            resolve(true);
-        }, 3000);
-        
-        // Очистка
-        function cleanup() {
-            clearTimeout(timeout);
-            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-            if (form.parentNode) form.parentNode.removeChild(form);
-        }
-        
-        iframe.onload = function() {
-            console.log('Ответ от Google Script получен');
-            cleanup();
-            resolve(true);
-        };
-        
-        iframe.onerror = function() {
-            console.log('Ошибка iframe, но данные скорее всего отправлены');
-            cleanup();
-            resolve(true); // Всё равно считаем успехом
-        };
-        
-        // Отправляем
-        form.submit();
-        console.log('Данные отправлены через iframe:', fields);
-    });
-}
-
-// Прямая проверка скрипта
-async function testGoogleScript() {
-    try {
-        console.log('Тестируем скрипт...');
-        const testUrl = GOOGLE_SCRIPT_URL + '?test=' + Date.now();
-        const response = await fetch(testUrl);
-        const text = await response.text();
-        console.log('Ответ скрипта:', text);
-        return true;
-    } catch (error) {
-        console.log('Ошибка теста (это нормально для POST-скрипта):', error.message);
-        return true; // Всё равно продолжаем
-    }
-}
-
 // Сохранение гостей локально
-function saveGuestLocally(guestData) {
-    let guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
-    guests.push({
-        ...guestData,
-        date: new Date().toISOString()
+function saveGuestLocally() {
+    const selectedDrinks = [];
+    document.querySelectorAll('input[name="drinks"]:checked').forEach(checkbox => {
+        selectedDrinks.push(checkbox.value);
     });
+    
+    const guestData = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        guests: document.querySelector('select[name="guests"]').value,
+        drinks: selectedDrinks.join(', ') || 'Не указано',
+        message: document.getElementById('message').value.trim() || 'Нет',
+        date: new Date().toISOString()
+    };
+    
+    let guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
+    guests.push(guestData);
     localStorage.setItem('weddingGuests', JSON.stringify(guests));
     console.log('✅ Сохранено локально. Всего гостей:', guests.length);
-    console.log('Все гости:', guests);
+}
+
+// Вызывается при успешной отправке формы
+function onFormSubmitSuccess() {
+    console.log('✅ Форма отправлена в Google Sheets');
+    
+    // Сохраняем локально
+    saveGuestLocally();
+    
+    // Закрываем форму
+    document.getElementById('rsvpForm').classList.remove('active');
+    
+    // Показываем "Спасибо"
+    document.getElementById('thanksOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Очищаем форму
+    document.getElementById('weddingForm').reset();
+    
+    // Конфетти
+    createConfetti();
 }
 
 // Работа с формой
@@ -152,12 +102,9 @@ function handleRSVP() {
     const rsvpButton = document.querySelector('.rsvp-button');
     const formContainer = document.getElementById('rsvpForm');
     const closeButton = document.getElementById('closeForm');
-    const form = document.getElementById('weddingForm');
     const thanksOverlay = document.getElementById('thanksOverlay');
     const backToSite = document.getElementById('backToSite');
-    
-    // Тестируем скрипт при загрузке
-    testGoogleScript();
+    const hiddenIframe = document.querySelector('iframe[name="hidden_iframe"]');
     
     // Открытие формы
     rsvpButton.addEventListener('click', () => {
@@ -188,58 +135,12 @@ function handleRSVP() {
         document.body.style.overflow = '';
     });
     
-    // Отправка формы
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const submitBtn = form.querySelector('.submit-btn');
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-        
-        // Собираем данные формы
-        const selectedDrinks = [];
-        document.querySelectorAll('input[name="drinks"]:checked').forEach(checkbox => {
-            selectedDrinks.push(checkbox.value);
+    // Отслеживаем загрузку iframe (успешная отправка формы)
+    if (hiddenIframe) {
+        hiddenIframe.addEventListener('load', () => {
+            onFormSubmitSuccess();
         });
-        
-        const guestData = {
-            name: document.getElementById('name').value.trim(),
-            email: document.getElementById('email').value.trim(),
-            phone: document.getElementById('phone').value.trim(),
-            guests: document.querySelector('select[name="guests"]').value,
-            drinks: selectedDrinks.join(', ') || 'Не указано',
-            message: document.getElementById('message').value.trim() || 'Нет'
-        };
-        
-        console.log('📤 Отправка данных:', guestData);
-        
-        // Всегда сохраняем локально
-        saveGuestLocally(guestData);
-        
-        // Пробуем отправить в Google Sheets
-        sendToGoogleSheets(guestData).then(() => {
-            console.log('✅ Отправка в Google Sheets завершена');
-        }).catch(err => {
-            console.log('⚠️ Ошибка отправки, но данные сохранены локально');
-        });
-        
-        // Закрываем форму
-        closeForm();
-        
-        // Показываем страницу "Спасибо"
-        thanksOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Очищаем форму
-        form.reset();
-        
-        // Эффект конфетти
-        createConfetti();
-        
-        // Убираем загрузку
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-    });
+    }
 }
 
 // Эффект конфетти
@@ -360,7 +261,7 @@ document.addEventListener('mousemove', (e) => {
 // Инициализация всего
 document.addEventListener('DOMContentLoaded', () => {
     console.log('💒 Сайт загружен');
-    console.log('📋 URL скрипта:', GOOGLE_SCRIPT_URL);
+    console.log('📋 Отправка формы через HTML (не через fetch)');
     createHearts();
     startCountdown();
     handleRSVP();
