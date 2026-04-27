@@ -1,5 +1,5 @@
 // URL вашего Google Apps Script
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6ppGMgwjJRXtRk2UejdhZqMaPmsoIogIl_Mw_phx41Uxrz9OXYFKjVD_ydwxFkMmA/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPCp6LAwPlGtlL9rUzqcE4D5CQc1P0XNLNlKRywAoBSfAxmJY9tBBihpf8g3-IpoOb/exec';
 
 // Создание плавающих сердечек
 function createHearts() {
