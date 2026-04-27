@@ -1,270 +1,519 @@
-// URL Google Apps Script (не используется для отправки, только для инфо)
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxPCp6LAwPlGtlL9rUzqcE4D5CQc1P0XNLNlKRywAoBSfAxmJY9tBBihpf8g3-IpoOb/exec';
-
-// Создание плавающих сердечек
-function createHearts() {
-    const container = document.getElementById('heartsContainer');
-    const heartEmojis = ['❤️', '💕', '💗', '💖', '💝', '✨', '🕊️'];
-    
-    setInterval(() => {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-        
-        container.appendChild(heart);
-        
-        setTimeout(() => {
-            heart.remove();
-        }, 4000);
-    }, 500);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// Таймер обратного отсчета
-function startCountdown() {
-    const weddingDate = new Date('2026-09-13T16:00:00').getTime();
-    
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = weddingDate - now;
-        
-        if (distance < 0) {
-            document.getElementById('days').textContent = '00';
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-            return;
-        }
-        
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        document.getElementById('days').textContent = String(days).padStart(2, '0');
-        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #0a0a0a;
+    color: #ffffff;
+    line-height: 1.8;
+    overflow-x: hidden;
+}
+
+.main-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #111111;
+    min-height: 100vh;
+}
+
+/* ===== Hero Section ===== */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.main-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) brightness(0.6);
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 30px;
+    animation: fadeUp 2s ease-out;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.names {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 40px rgba(255,255,255,0.3);
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #cccccc;
+    margin-bottom: 15px;
+}
+
+.hero-date {
+    font-size: 22px;
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 2px;
+}
+
+/* ===== Text Sections ===== */
+.text-block {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.text-block h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+.text-block h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: #ffffff;
+    margin: 20px auto 0;
+    opacity: 0.5;
+}
+
+.text-block p {
+    font-size: 16px;
+    font-weight: 300;
+    color: #cccccc;
+    max-width: 500px;
+    margin: 0 auto 15px;
+    line-height: 2;
+}
+
+.text-block p strong {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.text-small {
+    font-size: 13px !important;
+    opacity: 0.7;
+    margin-top: 25px !important;
+}
+
+/* ===== CTA Block ===== */
+.cta-block {
+    margin-top: 40px;
+}
+
+.cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px !important;
+    color: #ffffff !important;
+    margin-bottom: 30px !important;
+    letter-spacing: 2px;
+}
+
+/* ===== RSVP Button ===== */
+.rsvp-button {
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    padding: 16px 50px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.rsvp-button:hover {
+    background: #ffffff;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+}
+
+/* ===== Schedule ===== */
+.schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    padding: 25px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+}
+
+.schedule-time {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: #ffffff;
+    min-width: 70px;
+    padding-top: 2px;
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.schedule-place {
+    font-size: 14px;
+    font-weight: 400;
+    color: #cccccc;
+}
+
+.schedule-address {
+    font-size: 12px;
+    color: #999999;
+    font-weight: 300;
+}
+
+/* ===== Modal ===== */
+.rsvp-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.rsvp-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 50px 40px;
+    margin: 40px 0;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    animation: modalIn 0.5s ease;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 32px;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #ffffff;
+}
+
+.modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-subtitle {
+    font-size: 13px;
+    color: #999;
+    text-align: center;
+    margin-bottom: 35px;
+    font-style: italic;
+}
+
+/* ===== Form ===== */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #999;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333;
+    color: #ffffff;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-bottom-color: #ffffff;
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Radio Group */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #cccccc;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin: 0;
+}
+
+.radio-group input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.radio-group input[type="radio"]:checked {
+    border-color: #ffffff;
+}
+
+.radio-group input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50%;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    background: #cccccc;
+    transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Thanks Overlay ===== */
+.thanks-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.thanks-overlay.active {
+    display: flex;
+}
+
+.thanks-card {
+    text-align: center;
+    padding: 60px 40px;
+    animation: modalIn 0.5s ease;
+}
+
+.thanks-icon {
+    font-size: 60px;
+    margin-bottom: 25px;
+}
+
+.thanks-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.thanks-card p {
+    color: #cccccc;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
+
+.back-btn {
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    padding: 14px 40px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* ===== Divider ===== */
+.divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.3);
+    margin: 0 auto;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .names {
+        font-size: 38px;
     }
     
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-}
-
-// Сохранение гостей локально
-function saveGuestLocally() {
-    const selectedDrinks = [];
-    document.querySelectorAll('input[name="drinks"]:checked').forEach(checkbox => {
-        selectedDrinks.push(checkbox.value);
-    });
-    
-    const guestData = {
-        name: document.getElementById('name').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        guests: document.querySelector('select[name="guests"]').value,
-        drinks: selectedDrinks.join(', ') || 'Не указано',
-        message: document.getElementById('message').value.trim() || 'Нет',
-        date: new Date().toISOString()
-    };
-    
-    let guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
-    guests.push(guestData);
-    localStorage.setItem('weddingGuests', JSON.stringify(guests));
-    console.log('✅ Сохранено локально. Всего гостей:', guests.length);
-}
-
-// Вызывается при успешной отправке формы
-function onFormSubmitSuccess() {
-    console.log('✅ Форма отправлена в Google Sheets');
-    
-    // Сохраняем локально
-    saveGuestLocally();
-    
-    // Закрываем форму
-    document.getElementById('rsvpForm').classList.remove('active');
-    
-    // Показываем "Спасибо"
-    document.getElementById('thanksOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Очищаем форму
-    document.getElementById('weddingForm').reset();
-    
-    // Конфетти
-    createConfetti();
-}
-
-// Работа с формой
-function handleRSVP() {
-    const rsvpButton = document.querySelector('.rsvp-button');
-    const formContainer = document.getElementById('rsvpForm');
-    const closeButton = document.getElementById('closeForm');
-    const thanksOverlay = document.getElementById('thanksOverlay');
-    const backToSite = document.getElementById('backToSite');
-    const hiddenIframe = document.querySelector('iframe[name="hidden_iframe"]');
-    
-    // Открытие формы
-    rsvpButton.addEventListener('click', () => {
-        formContainer.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-    
-    // Закрытие формы
-    function closeForm() {
-        formContainer.classList.remove('active');
-        document.body.style.overflow = '';
+    .hero-subtitle {
+        font-size: 12px;
+        letter-spacing: 3px;
     }
     
-    closeButton.addEventListener('click', closeForm);
-    formContainer.addEventListener('click', (e) => {
-        if (e.target === formContainer) closeForm();
-    });
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && formContainer.classList.contains('active')) {
-            closeForm();
-        }
-    });
-    
-    // Закрытие страницы "Спасибо"
-    backToSite.addEventListener('click', () => {
-        thanksOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    });
-    
-    // Отслеживаем загрузку iframe (успешная отправка формы)
-    if (hiddenIframe) {
-        hiddenIframe.addEventListener('load', () => {
-            onFormSubmitSuccess();
-        });
-    }
-}
-
-// Эффект конфетти
-function createConfetti() {
-    const colors = ['#f48fb1', '#f06292', '#ec407a', '#e91e63', '#c2185b'];
-    
-    for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.style.position = 'fixed';
-        confetti.style.width = '10px';
-        confetti.style.height = '10px';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.top = '-10px';
-        confetti.style.zIndex = '3000';
-        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-        confetti.style.pointerEvents = 'none';
-        
-        document.body.appendChild(confetti);
-        
-        const animation = confetti.animate([
-            { 
-                transform: 'translateY(0) rotate(0deg)',
-                opacity: 1
-            },
-            { 
-                transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`,
-                opacity: 0
-            }
-        ], {
-            duration: Math.random() * 2000 + 1000,
-            easing: 'ease-out'
-        });
-        
-        animation.onfinish = () => confetti.remove();
-    }
-}
-
-// Экспорт списка гостей в CSV
-function exportGuestsList() {
-    const guests = JSON.parse(localStorage.getItem('weddingGuests') || '[]');
-    
-    if (guests.length === 0) {
-        alert('Пока нет подтверждений');
-        return;
+    .hero-date {
+        font-size: 18px;
     }
     
-    let csv = '\uFEFFИмя,Email,Телефон,Гостей,Напитки,Пожелания,Дата\n';
-    guests.forEach(guest => {
-        csv += `"${guest.name}","${guest.email}","${guest.phone}","${guest.guests}","${guest.drinks || 'Не указано'}","${guest.message || ''}","${guest.date}"\n`;
-    });
-    
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'список_гостей.csv';
-    link.click();
-}
-
-// Плавная прокрутка
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-}
-
-// Анимация появления при скролле
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.invitation-card, .detail-item').forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'all 0.6s ease-out';
-        observer.observe(element);
-    });
-}
-
-// Горячая клавиша для экспорта (Ctrl+Shift+E)
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'E') {
-        e.preventDefault();
-        const password = prompt('Введите пароль для экспорта списка гостей:');
-        if (password === 'wedding2025') {
-            exportGuestsList();
-        }
+    .text-block {
+        padding: 60px 25px;
     }
-});
-
-// Параллакс эффект для цветов
-document.addEventListener('mousemove', (e) => {
-    const flowers = document.querySelectorAll('.flower');
-    const mouseX = e.clientX / window.innerWidth - 0.5;
-    const mouseY = e.clientY / window.innerHeight - 0.5;
     
-    flowers.forEach((flower, index) => {
-        const speed = (index + 1) * 20;
-        flower.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
-    });
-});
-
-// Инициализация всего
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('💒 Сайт загружен');
-    console.log('📋 Отправка формы через HTML (не через fetch)');
-    createHearts();
-    startCountdown();
-    handleRSVP();
-    initSmoothScroll();
-    initScrollAnimations();
-});
+    .text-block h2 {
+        font-size: 28px;
+    }
+    
+    .modal-content {
+        padding: 35px 25px;
+    }
+    
+    .schedule-item {
+        gap: 15px;
+    }
+    
+    .schedule-time {
+        font-size: 20px;
+        min-width: 55px;
+    }
+}
