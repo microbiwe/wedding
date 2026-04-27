@@ -83,7 +83,13 @@
         <div class="form-card">
             <span class="close-form" id="closeForm">&times;</span>
             <h3>Подтверждение участия</h3>
-            <form id="weddingForm">
+            <form id="weddingForm" 
+                  action="https://script.google.com/macros/s/AKfycbxPCp6LAwPlGtlL9rUzqcE4D5CQc1P0XNLNlKRywAoBSfAxmJY9tBBihpf8g3-IpoOb/exec" 
+                  method="POST" 
+                  target="hidden_iframe">
+                
+                <iframe name="hidden_iframe" style="display:none;"></iframe>
+                
                 <div class="form-group">
                     <label for="name">Ваше имя *</label>
                     <input type="text" id="name" name="name" required placeholder="Иван и Мария">
